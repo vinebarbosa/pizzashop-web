@@ -1,19 +1,8 @@
-import {
-
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Cell
-} from 'recharts'
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from './ui/card'
 import { BarChartIcon } from 'lucide-react'
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import colors from 'tailwindcss/colors'
+
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 const data = [
   { product: 'Pepperoni', amount: 30 },
@@ -22,7 +11,6 @@ const data = [
   { product: 'Calabresa', amount: 18 },
   { product: 'Frango com Catupirí', amount: 32 },
 ]
-
 
 const COLORS = [
   colors.amber[500],
@@ -39,15 +27,14 @@ export function PopularProductsChart() {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-medium">
             Produtos populares
-
           </CardTitle>
-          <BarChartIcon className='size-4 text-muted-foreground' />
+          <BarChartIcon className="size-4 text-muted-foreground" />
         </div>
       </CardHeader>
 
       <CardContent>
         <ResponsiveContainer width="100%" height={240}>
-          <PieChart  style={{ fontSize: 12 }}>
+          <PieChart style={{ fontSize: 12 }}>
             <Pie
               data={data}
               dataKey="amount"
@@ -89,9 +76,10 @@ export function PopularProductsChart() {
               }}
             >
               {data.map((_, index) => (
-                <Cell key={`cell-${index}`}
+                <Cell
+                  key={`cell-${index}`}
                   fill={COLORS[index]}
-                  className='stroke-background hover:opacity-80 transition-colors'
+                  className="stroke-background hover:opacity-80 transition-colors"
                 />
               ))}
             </Pie>
