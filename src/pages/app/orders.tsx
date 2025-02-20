@@ -12,12 +12,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useSearchParams } from 'react-router-dom'
+import { z } from 'zod'
 
 export function Orders() {
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const pageIndex = z.coerce.number().transform(page => page - 1).parse(searchParams.get('page') ?? '1')
+
   const { data: result } = useQuery({
-    queryKey: ['orders'],
-    queryFn: getOrders,
+    queryKey: ['orders', pageIndex],
+    queryFn: () => getOrders({ pageIndex  }),
   })
+
+
+  function handlePageChange(pageIndex: number) {
+    setSearchParams(prev => {
+      prev.set('page', (pageIndex + 1).toString())
+      return prev
+    })
+  }
 
   return (
     <>
@@ -52,7 +67,9 @@ export function Orders() {
             </Table>
           </div>
 
-          <Pagination currentPage={result?.meta.pageIndex} itensPerPage={result?.meta.perPage} totalOfItens={result?.meta.totalCount} />
+          <Pagination
+            onPageChange={handlePageChange}
+          currentPage={result?.meta.pageIndex} itensPerPage={result?.meta.perPage} totalOfItens={result?.meta.totalCount} />
         </div>
       </div>
     </>
