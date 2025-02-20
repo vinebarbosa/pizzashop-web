@@ -1,12 +1,27 @@
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { CheckIcon, SearchIcon, XIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 import { OrderDetail } from './order-detail'
+import { OrderStatus } from './order-status'
 import { Dialog, DialogTrigger } from './ui/dialog'
 
-export function OrdersTableRow() {
+interface OrdersTableRowProps {
+  data: {
+    orderId: string
+    createdAt: string
+    status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
+    customerName: string
+    total: number
+  }
+}
+
+export function OrdersTableRow({
+  data: { createdAt, customerName, orderId, status, total },
+}: OrdersTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -20,18 +35,17 @@ export function OrdersTableRow() {
           <OrderDetail />
         </Dialog>
       </TableCell>
-      <TableCell className="font-mono text-xs font-medium">
-        o123h041dbiubsdf9a8
+      <TableCell className="font-mono text-xs font-medium">{orderId}</TableCell>
+      <TableCell className="text-muted-foreground">
+        {formatDistanceToNow(createdAt, { locale: ptBR, addSuffix: true })}
       </TableCell>
-      <TableCell className="text-muted-foreground">Há 5 minutos</TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-slate-400" />
-          <span className="font-medium text-muted-foreground">Pendente</span>
-        </div>
+        <OrderStatus status={status} />
       </TableCell>
-      <TableCell className="font-medium">Vinícios Barbosa da Silva</TableCell>
-      <TableCell className="font-medium">R$ 124,90</TableCell>
+      <TableCell className="font-medium">{customerName}</TableCell>
+      <TableCell className="font-medium">
+        {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+      </TableCell>
       <TableCell>
         <Button variant="outline" size="xs">
           <CheckIcon className="size-3" />
