@@ -23,13 +23,14 @@ import {
 
 interface OrderDetailProps {
   orderId: string
+  isDetailsOpen: boolean
 }
 
-export function OrderDetail({ orderId }: OrderDetailProps) {
+export function OrderDetail({ orderId, isDetailsOpen }: OrderDetailProps) {
   const { data: order } = useQuery({
     queryKey: ['order', orderId],
     queryFn: () => getOrderDetails({ orderId }),
-    enabled: !!orderId,
+    enabled: !!orderId && isDetailsOpen,
   })
 
 
