@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CheckIcon, SearchIcon, XIcon } from 'lucide-react'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -22,17 +23,19 @@ interface OrdersTableRowProps {
 export function OrdersTableRow({
   data: { createdAt, customerName, orderId, status, total },
 }: OrdersTableRowProps) {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+
   return (
     <TableRow>
       <TableCell>
-        <Dialog>
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" size="xs">
               <SearchIcon className="size-3" />
               <span className="sr-only">Detalhes do pedido</span>
             </Button>
           </DialogTrigger>
-          <OrderDetail />
+          <OrderDetail orderId={orderId} />
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">{orderId}</TableCell>
@@ -44,7 +47,7 @@ export function OrdersTableRow({
       </TableCell>
       <TableCell className="font-medium">{customerName}</TableCell>
       <TableCell className="font-medium">
-        {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+        {(total/100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
       </TableCell>
       <TableCell>
         <Button variant="outline" size="xs">
