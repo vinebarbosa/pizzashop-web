@@ -33,7 +33,6 @@ export function OrderDetail({ orderId, isDetailsOpen }: OrderDetailProps) {
     enabled: !!orderId && isDetailsOpen,
   })
 
-
   if (!order) {
     return null
   }
@@ -97,28 +96,37 @@ export function OrderDetail({ orderId, isDetailsOpen }: OrderDetailProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {order.orderItems.map(({ id, priceInCents, product, quantity }) => (
-                <TableRow key={id}>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell className="text-right">{quantity}</TableCell>
-                  <TableCell className="text-right">{(priceInCents / 100).toLocaleString("pt-BR", {
-                    style: 'currency',
-                    currency: "BRL"
-                  })}</TableCell>
-                  <TableCell className="text-right">{(quantity * priceInCents / 100).toLocaleString("pt-BR", {
-                    style: 'currency',
-                    currency: "BRL"
-                  })}</TableCell>
-                </TableRow>
-              ))}
+              {order.orderItems.map(
+                ({ id, priceInCents, product, quantity }) => (
+                  <TableRow key={id}>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell className="text-right">{quantity}</TableCell>
+                    <TableCell className="text-right">
+                      {(priceInCents / 100).toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      })}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {((quantity * priceInCents) / 100).toLocaleString(
+                        'pt-BR',
+                        {
+                          style: 'currency',
+                          currency: 'BRL',
+                        },
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>Total do pedido</TableCell>
                 <TableCell className="text-right font-medium">
-                 {(order.totalInCents/100).toLocaleString("pt-BR", {
+                  {(order.totalInCents / 100).toLocaleString('pt-BR', {
                     style: 'currency',
-                    currency: "BRL"
+                    currency: 'BRL',
                   })}
                 </TableCell>
               </TableRow>

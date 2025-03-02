@@ -36,6 +36,7 @@ export function Orders() {
         customerName,
         status: status !== 'all' ? status : null,
       }),
+    staleTime: Infinity,
   })
 
   function handlePageChange(pageIndex: number) {

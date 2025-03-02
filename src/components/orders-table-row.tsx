@@ -1,7 +1,15 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CheckIcon, SearchIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
+
+import { approveOrder as approveOrderFn } from '@/api/approve-order'
+import { cancelOrder as cancelOrderFn } from '@/api/cancel-order'
+import { deliverOrder as deliverOrderFn } from '@/api/deliver-order'
+import { dispatchOrder as dispatchOrderFn } from '@/api/dispatch-order'
+import { GetOrdersResponse } from '@/api/get-orders'
 
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -9,12 +17,6 @@ import { TableCell, TableRow } from '@/components/ui/table'
 import { OrderDetail } from './order-detail'
 import { OrderStatus } from './order-status'
 import { Dialog, DialogTrigger } from './ui/dialog'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-
-import { cancelOrder as cancelOrderFn } from '@/api/cancel-order'
-import { GetOrdersResponse } from '@/api/get-orders'
-import { toast } from 'sonner'
 
 interface OrdersTableRowProps {
   data: {
@@ -33,31 +35,59 @@ export function OrdersTableRow({
 
   const queryClient = useQueryClient()
 
+  function updateOrderStatusOnCache(orderId: string, status: OrderStatus) {
+    const cached = queryClient.getQueriesData<GetOrdersResponse>({
+      queryKey: ['orders'],
+    })
+    cached.forEach(([cachedQuery, cachedData]) => {
+      if (!cachedData) return
 
-  const { mutate: cancelOrder } = useMutation({
+      queryClient.setQueryData<GetOrdersResponse>(cachedQuery, {
+        ...cachedData,
+        orders: cachedData.orders.map((order) => {
+          if (order.orderId === orderId) {
+            return {
+              ...order,
+              status,
+            }
+          }
+
+          return order
+        }),
+      })
+    })
+  }
+
+  const { mutate: approveOrder, isPending: isApprovingOrder } = useMutation({
+    mutationFn: approveOrderFn,
+    async onSuccess(_, { orderId }) {
+      toast.success('O pedido está em preparo')
+      updateOrderStatusOnCache(orderId, 'processing')
+    },
+  })
+
+  const { mutate: dispatchOrder, isPending: isDispatchingOrder } = useMutation({
+    mutationFn: dispatchOrderFn,
+    async onSuccess(_, { orderId }) {
+      toast.success('O pedido está em rota de entrega')
+      updateOrderStatusOnCache(orderId, 'delivering')
+    },
+  })
+
+  const { mutate: deliverOrder, isPending: isDeliveringOrder } = useMutation({
+    mutationFn: deliverOrderFn,
+    async onSuccess(_, { orderId }) {
+      toast.success('O pedido foi entregue')
+      updateOrderStatusOnCache(orderId, 'delivered')
+    },
+  })
+
+  const { mutate: cancelOrder, isPending: isCancelingOrder } = useMutation({
     mutationFn: cancelOrderFn,
     async onSuccess(_, { orderId }) {
-      toast.success("O pedido foi cancelado")
-
-      const cached = queryClient.getQueriesData<GetOrdersResponse>({ queryKey: ['orders'] })
-      cached.forEach(([cachedQuery, cachedData]) => {
-        if (!cachedData) return
-
-        queryClient.setQueryData<GetOrdersResponse>(cachedQuery, {
-          ...cachedData,
-          orders: cachedData.orders.map(order => {
-            if (order.orderId === orderId) {
-              return {
-                ...order,
-                status: 'canceled'
-              }
-            }
-
-            return order
-          })
-        })
-      })
-    }
+      toast.success('O pedido foi cancelado')
+      updateOrderStatusOnCache(orderId, 'canceled')
+    },
   })
 
   return (
@@ -82,16 +112,55 @@ export function OrdersTableRow({
       </TableCell>
       <TableCell className="font-medium">{customerName}</TableCell>
       <TableCell className="font-medium">
-        {(total / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+        {(total / 100).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        })}
       </TableCell>
       <TableCell>
-        <Button variant="outline" size="xs">
-          <CheckIcon className="size-3" />
-          Aprovar
-        </Button>
+        {status === 'pending' && (
+          <Button
+            variant="outline"
+            size="xs"
+            disabled={isApprovingOrder}
+            onClick={() => approveOrder({ orderId })}
+          >
+            <CheckIcon className="size-3" />
+            Aprovar
+          </Button>
+        )}
+        {status === 'processing' && (
+          <Button
+            variant="outline"
+            size="xs"
+            disabled={isDispatchingOrder}
+            onClick={() => dispatchOrder({ orderId })}
+          >
+            <CheckIcon className="size-3" />
+            Em entrega
+          </Button>
+        )}
+        {status === 'delivering' && (
+          <Button
+            variant="outline"
+            size="xs"
+            disabled={isDeliveringOrder}
+            onClick={() => deliverOrder({ orderId })}
+          >
+            <CheckIcon className="size-3" />
+            Entregue
+          </Button>
+        )}
       </TableCell>
       <TableCell>
-        <Button variant="ghost" size="xs" onClick={() => cancelOrder({ orderId })} disabled={!['pending', 'processing'].includes(status)}>
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={() => cancelOrder({ orderId })}
+          disabled={
+            !['pending', 'processing'].includes(status) || isCancelingOrder
+          }
+        >
           <XIcon className="size-3" />
           Cancelar
         </Button>
