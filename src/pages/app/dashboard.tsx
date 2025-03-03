@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async'
 
-import { DayOrdersAmountCard } from '@/components/day-orders-amount'
-import { MonthCanceledOrdersAmountCard } from '@/components/month-canceled-orders-amount'
-import { MonthOrdersAmountCard } from '@/components/month-orders-amount'
+import { DayOrdersAmountCard } from '@/components/day-orders-amount-card'
+import { MonthCanceledOrdersAmountCard } from '@/components/month-canceled-orders-amount-card'
+import { MonthOrdersAmountCard } from '@/components/month-orders-amount-card'
 import { MonthRevenueCard } from '@/components/month-revenue-card'
 import { PopularProductsChart } from '@/components/popular-products-chart'
 import { RevenuesChart } from '@/components/revenues-chart'
