@@ -1,4 +1,3 @@
-
 import { Skeleton } from './ui/skeleton'
 import {
   Table,
@@ -18,35 +17,32 @@ export function OrderDetailSkeleton() {
           <TableRow>
             <TableCell className="text-muted-foreground">Status</TableCell>
             <TableCell className="flex justify-end">
-              <Skeleton className='h-5 w-20' />
+              <Skeleton className="h-5 w-20" />
             </TableCell>
           </TableRow>
         </TableBody>
         <TableRow>
           <TableCell className="text-muted-foreground">Cliente</TableCell>
           <TableCell className="flex justify-end">
-            <Skeleton className='h-5 w-[164px]' />
+            <Skeleton className="h-5 w-[164px]" />
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="text-muted-foreground">E-mail</TableCell>
           <TableCell className="flex justify-end">
-            <Skeleton className='h-5 w-[200px]' />
+            <Skeleton className="h-5 w-[200px]" />
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell className="text-muted-foreground">Telefone</TableCell>
           <TableCell className="flex justify-end">
-            <Skeleton className='h-5 w-[140px]' />
+            <Skeleton className="h-5 w-[140px]" />
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell className="text-muted-foreground">
-            Realizado há
-          </TableCell>
+          <TableCell className="text-muted-foreground">Realizado há</TableCell>
           <TableCell className="flex justify-end">
-            <Skeleton className='h-5 w-[148px]' />
-
+            <Skeleton className="h-5 w-[148px]" />
           </TableCell>
         </TableRow>
       </Table>
@@ -61,34 +57,28 @@ export function OrderDetailSkeleton() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 2 }).map(
-            (_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <Skeleton className='h-5 w-[140px]' />
-                </TableCell>
-                <TableCell className="text-right">
-                  <Skeleton className='h-5 w-3 ml-auto' />
-
-                </TableCell>
-                <TableCell className="text-right">
-                  <Skeleton className='h-5 w-12 ml-auto' />
-
-                </TableCell>
-                <TableCell className="text-right">
-                  <Skeleton className='h-5 w-12 ml-auto' />
-
-                </TableCell>
-              </TableRow>
-            ),
-          )}
+          {Array.from({ length: 2 }).map((_, i) => (
+            <TableRow key={i}>
+              <TableCell>
+                <Skeleton className="h-5 w-[140px]" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-5 w-3 ml-auto" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-5 w-12 ml-auto" />
+              </TableCell>
+              <TableCell className="text-right">
+                <Skeleton className="h-5 w-12 ml-auto" />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total do pedido</TableCell>
             <TableCell className="text-right font-medium">
-              <Skeleton className='h-5 w-20' />
-
+              <Skeleton className="h-5 w-20" />
             </TableCell>
           </TableRow>
         </TableFooter>

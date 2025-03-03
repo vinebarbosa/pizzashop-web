@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
 
 import { getOrders } from '@/api/get-orders'
+import { OrderTableRowSkeleton } from '@/components/order-table-skeleton'
 import { OrdersTableFilters } from '@/components/orders-table-filters'
 import { OrdersTableRow } from '@/components/orders-table-row'
 import { Pagination } from '@/components/pagination'
@@ -14,7 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { OrderTableRowSkeleton } from '@/components/order-table-skeleton'
 
 export function Orders() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -72,11 +72,7 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {
-                  isOrdersLoading && (
-                    <OrderTableRowSkeleton/>
-                  )
-                }
+                {isOrdersLoading && <OrderTableRowSkeleton />}
                 {result &&
                   result.orders.map((order) => (
                     <OrdersTableRow key={order.orderId} data={order} />

@@ -4,6 +4,7 @@ import { ptBR } from 'date-fns/locale'
 
 import { getOrderDetails } from '@/api/get-order-details'
 
+import { OrderDetailSkeleton } from './order-detail-skeleton'
 import { OrderStatus } from './order-status'
 import {
   DialogContent,
@@ -20,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from './ui/table'
-import { OrderDetailSkeleton } from './order-detail-skeleton'
 
 interface OrderDetailProps {
   orderId: string
@@ -130,8 +130,8 @@ export function OrderDetail({ orderId, isDetailsOpen }: OrderDetailProps) {
             </TableFooter>
           </Table>
         </div>
-      ): (
-        <OrderDetailSkeleton/>
+      ) : (
+        <OrderDetailSkeleton />
       )}
     </DialogContent>
   )

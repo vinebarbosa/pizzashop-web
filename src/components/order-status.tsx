@@ -16,7 +16,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
   canceled: 'Cancelado',
   delivered: 'Entregue',
   delivering: 'Em rota',
-  processing: 'Em prepero',
+  processing: 'Em preparo',
 }
 
 export function OrderStatus({ status }: OrderStatusProps) {
@@ -29,6 +29,7 @@ export function OrderStatus({ status }: OrderStatusProps) {
           'bg-emerald-500': status === 'delivered',
           'bg-amber-500': ['delivering', 'processing'].includes(status),
         })}
+        data-testid="badge"
       />
       <span className="font-medium text-muted-foreground">
         {orderStatusMap[status]}
