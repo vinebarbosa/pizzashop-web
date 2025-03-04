@@ -1,64 +1,64 @@
-import { http, HttpResponse } from "msw";
-import { GetOrdersResponse } from "../get-orders";
-import type { OrderStatus } from "@/components/order-status";
+import { http, HttpResponse } from 'msw'
 
-type Orders = GetOrdersResponse["orders"];
+import type { OrderStatus } from '@/components/order-status'
+
+import { GetOrdersResponse } from '../get-orders'
+
+type Orders = GetOrdersResponse['orders']
 
 const statuses: OrderStatus[] = [
-  "pending",
-  "processing",
-  "delivering",
-  "delivered",
-  "canceled",
-];
+  'pending',
+  'processing',
+  'delivering',
+  'delivered',
+  'canceled',
+]
 
 export const orders: Orders = Array.from({ length: 60 }).map((_, index) => ({
   orderId: `order-${index + 1}`,
   createdAt: new Date().toISOString(),
-  customerName: `customer-${index + 1}`,
+  customerName: `Customer ${index + 1}`,
   status: statuses[index % 5],
   total: Math.round(Math.random() * 1000),
-}));
+}))
 
 export const getOrderMock = http.get<never, never, GetOrdersResponse>(
-  "/orders",
+  '/orders',
   async ({ request }) => {
-    const searchParams = new URL(request.url).searchParams;
+    const searchParams = new URL(request.url).searchParams
 
-    const pageIndex = searchParams.get("pageIndex")
-      ? Number(searchParams.get("pageIndex"))
-      : 0;
+    const pageIndex = searchParams.get('pageIndex')
+      ? Number(searchParams.get('pageIndex'))
+      : 0
 
-    const orderId = searchParams.get("orderId");
+    const orderId = searchParams.get('orderId')
 
-    const customerName = searchParams.get("customerName");
+    const customerName = searchParams.get('customerName')
 
-    const status = searchParams.get("status");
+    const status = searchParams.get('status')
 
-    let filteredOrders = orders;
+    let filteredOrders = orders
 
     if (orderId) {
       filteredOrders = filteredOrders.filter((order) =>
-        order.orderId.includes(orderId)
-      );
+        order.orderId.includes(orderId),
+      )
     }
 
     if (customerName) {
       filteredOrders = filteredOrders.filter((order) =>
-        order.customerName.includes(customerName)
-      );
+        order.customerName.includes(customerName),
+      )
     }
 
     if (status) {
-      filteredOrders = filteredOrders.filter(
-        (order) => order.status === status
-      );
+      filteredOrders = filteredOrders.filter((order) => order.status === status)
     }
 
     const paginatedOrders = filteredOrders.slice(
       pageIndex * 10,
-      (pageIndex + 1) * 10
-    );
+      (pageIndex + 1) * 10,
+    )
 
     return HttpResponse.json({
       orders: paginatedOrders,
@@ -67,6 +67,6 @@ export const getOrderMock = http.get<never, never, GetOrdersResponse>(
         perPage: 10,
         totalCount: filteredOrders.length,
       },
-    });
-  }
-);
+    })
+  },
+)
