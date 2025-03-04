@@ -1,9 +1,9 @@
-import { render } from "@testing-library/react";
-import { SignIn } from "./sign-in";
-import { HelmetProvider } from "react-helmet-async";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MemoryRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render } from '@testing-library/react'
+import { HelmetProvider } from 'react-helmet-async'
+import { MemoryRouter } from 'react-router-dom'
 
+import { SignIn } from './sign-in'
 
 const client = new QueryClient()
 const EMAIL_VALUE = 'leostronda@email.com'
@@ -19,10 +19,12 @@ describe('Signin', () => {
             </QueryClientProvider>
           </HelmetProvider>
         </MemoryRouter>
-      )
+      ),
     })
 
-    const emailInputElement = wrapper.getByLabelText('Seu email') as HTMLInputElement
+    const emailInputElement = wrapper.getByLabelText(
+      'Seu email',
+    ) as HTMLInputElement
 
     expect(emailInputElement.value).toEqual(EMAIL_VALUE)
   })

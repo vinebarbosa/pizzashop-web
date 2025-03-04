@@ -31,17 +31,22 @@ export function SignIn() {
     },
   })
 
-  const { mutateAsync: authenticate } = useMutation({
+  const { mutate: authenticate } = useMutation({
     mutationFn: signIn,
   })
 
-  async function handleSignIn({ email }: SignInFormValues) {
-    try {
-      authenticate({ email })
-      toast.success('Enviamos um link de autorização para o seu e-mail')
-    } catch {
-      toast.error('Credenciais inválidas!')
-    }
+  function handleSignIn({ email }: SignInFormValues) {
+    authenticate(
+      { email },
+      {
+        onSuccess: () => {
+          toast.success('Enviamos um link de autorização para o seu e-mail')
+        },
+        onError: () => {
+          toast.error('Credenciais inválidas!')
+        },
+      },
+    )
   }
 
   return (

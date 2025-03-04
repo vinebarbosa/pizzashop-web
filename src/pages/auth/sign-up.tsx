@@ -31,7 +31,7 @@ export function SignUp() {
 
   const navigate = useNavigate()
 
-  const { mutateAsync: registerRestaurant } = useMutation({
+  const { mutate: registerRestaurant } = useMutation({
     mutationFn: restaurantRegister,
   })
 
@@ -41,18 +41,22 @@ export function SignUp() {
     phone,
     restaurantName,
   }: SignUpFormValues) {
-    try {
-      registerRestaurant({ email, managerName, phone, restaurantName })
-
-      toast.success('Restaurante cadastrado com sucesso!', {
-        action: {
-          label: 'Login',
-          onClick: () => navigate(`/sign-in?email=${email}`),
+    registerRestaurant(
+      { email, managerName, phone, restaurantName },
+      {
+        onSuccess() {
+          toast.success('Restaurante cadastrado com sucesso!', {
+            action: {
+              label: 'Login',
+              onClick: () => navigate(`/sign-in?email=${email}`),
+            },
+          })
         },
-      })
-    } catch {
-      toast.error('Não foi possível cadastrar o restaurante')
-    }
+        onError() {
+          toast.error('Não foi possível cadastrar o restaurante')
+        },
+      },
+    )
   }
 
   return (
