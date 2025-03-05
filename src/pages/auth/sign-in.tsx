@@ -10,6 +10,7 @@ import { signIn } from '@/api/sign-in'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 
 const signInSchema = z.object({
   email: z.string().email(),
@@ -74,7 +75,16 @@ export function SignIn() {
               />
             </div>
             <Button className="w-full" type="submit" disabled={isSubmitting}>
-              Acessar painel
+            {
+                isSubmitting ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Aguarde
+                  </>
+                ) : (
+                  'Acessar painel'
+                )
+              }
             </Button>
           </form>
         </div>

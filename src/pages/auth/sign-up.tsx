@@ -10,6 +10,7 @@ import { restaurantRegister } from '@/api/restaurant-register'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Loader2 } from 'lucide-react'
 
 const signUpSchema = z.object({
   managerName: z.string().nonempty(),
@@ -92,7 +93,16 @@ export function SignUp() {
               <Input {...register('phone')} id="phone" type="tel" />
             </div>
             <Button className="w-full" type="submit" disabled={isSubmitting}>
-              Finalizar cadastro
+              {
+                isSubmitting ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Aguarde
+                  </>
+                ) : (
+                  'Finalizar cadastro'
+                )
+              }
             </Button>
 
             <p className="px-6 text-center text-sm leading-relaxed text-muted-foreground">
