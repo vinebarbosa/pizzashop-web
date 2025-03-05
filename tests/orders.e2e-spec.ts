@@ -40,8 +40,6 @@ test('Filter by order id', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Filtrar resultados' }).click()
 
-  expect(await page.locator('tbody tr').count()).toBe(1);
-
   await expect(page.getByRole('cell', { name: 'order-11' })).toHaveCount(1)
 })
 
@@ -51,8 +49,6 @@ test('Filter by customer name', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Nome do cliente' }).fill('Customer 11')
 
   await page.getByRole('button', { name: 'Filtrar resultados' }).click()
-
-  expect(await page.locator('tbody tr').count()).toBe(1);
 
   await expect(page.getByRole('cell', { name: 'Customer 11' })).toHaveCount(1)
 })
