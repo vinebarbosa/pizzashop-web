@@ -23,7 +23,6 @@ export function SignIn() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -31,7 +30,7 @@ export function SignIn() {
     },
   })
 
-  const { mutate: authenticate } = useMutation({
+  const { mutate: authenticate, isPending: isSubmitting } = useMutation({
     mutationFn: signIn,
   })
 

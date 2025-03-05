@@ -24,14 +24,13 @@ export function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
   })
 
   const navigate = useNavigate()
 
-  const { mutate: registerRestaurant } = useMutation({
+  const { mutate: registerRestaurant, isPending: isSubmitting } = useMutation({
     mutationFn: restaurantRegister,
   })
 
